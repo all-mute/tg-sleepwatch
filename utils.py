@@ -45,20 +45,34 @@ def calculate_points(target_time, actual_time):
         logger.error(f"Error calculating points: {e}")
         return 0
 
-def get_yesterday_date(now_date=None):
+def get_yesterday_date(now_date=None, timezone=None):
     """
     Get yesterday's date in YYYY-MM-DD format.
     
     Args:
         now_date: Optional datetime object to calculate yesterday from.
                  If None, uses current datetime.
+        timezone: Optional timezone (pytz timezone object).
+                 If None, uses UTC.
     
     Returns:
         String representing yesterday's date in YYYY-MM-DD format
     """
-    if now_date is None:
-        now_date = datetime.now()
+    # Set default timezone to UTC if not provided
+    if timezone is None:
+        timezone = pytz.UTC
     
+    # Get current datetime if not provided
+    if now_date is None:
+        now_date = datetime.now(timezone)
+    elif now_date.tzinfo is None:
+        # Make naive datetime timezone-aware
+        now_date = timezone.localize(now_date)
+    
+    # Normalize to midnight to strip time component
+    now_date = now_date.replace(hour=0, minute=0, second=0, microsecond=0)
+    
+    # Calculate yesterday
     yesterday = now_date - timedelta(days=1)
     return yesterday.strftime('%Y-%m-%d')
 
