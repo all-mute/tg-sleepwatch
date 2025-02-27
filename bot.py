@@ -274,10 +274,27 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     )
     return ConversationHandler.END
 
+async def on_startup(dp):
+    # Устанавливаем команды бота
+    # Эта функция не будет работать, так как вы используете python-telegram-bot, а не aiogram
+    # Удаляем или комментируем этот код
+    pass
+
 def main() -> None:
     """Start the bot."""
     # Create the Application
     application = Application.builder().token(TOKEN).build()
+
+    # Устанавливаем команды бота для выпадающего списка
+    application.bot.set_my_commands([
+        ("start", "Start the bot"),
+        ("help", "Show available commands"),
+        ("join", "Join the sleep challenge"),
+        ("unjoin", "Leave the sleep challenge"),
+        ("leaderboard", "View current rankings"),
+        ("plot", "Show your sleep points as text graph"),
+        ("plot_png", "Show your sleep points as image")
+    ])
 
     # Add conversation handler for joining
     join_handler = ConversationHandler(
@@ -316,4 +333,4 @@ def main() -> None:
     application.run_polling()
 
 if __name__ == '__main__':
-    main()
+    main()  # Возвращаем оригинальный вызов
