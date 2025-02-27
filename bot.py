@@ -217,6 +217,7 @@ async def target_sleep_time(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         f"Your target sleep time: {time_text}\n\n"
         f"I'll ask you every day at 12:00 {timezone} what time you went to sleep yesterday. "
         f"Based on that, you'll get points for sleeping on time!"
+        f"Type /help to see all commands."
     )
     
     return ConversationHandler.END
