@@ -204,3 +204,42 @@ class Database:
         )
         conn.commit()
         return True
+
+    def deactivate_user(self, user_id):
+        """Deactivate a user (mark as not active)."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE users SET is_active = FALSE WHERE user_id = ?",
+            (user_id,)
+        )
+        conn.commit()
+        logger.info(f"Deactivated user {user_id}")
+        return cursor.rowcount > 0
+
+    def add_or_update_user(self, user_id, username, timezone, target_sleep_time, is_active=True, first_name=None):
+        """Add a new user or update an existing one."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        
+        # Check if user exists
+        cursor.execute("SELECT * FROM users WHERE user_id = ?", (user_id,))
+        existing_user = cursor.fetchone()
+        
+        if existing_user:
+            # Update existing user
+            cursor.execute('''
+            UPDATE users 
+            SET username = ?, timezone = ?, target_sleep_time = ?, is_active = ?
+            WHERE user_id = ?
+            ''', (username, timezone, target_sleep_time, is_active, user_id))
+        else:
+            # Add new user
+            cursor.execute('''
+            INSERT INTO users (user_id, username, timezone, target_sleep_time, join_date, is_active)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ''', (user_id, username, timezone, target_sleep_time, datetime.now().strftime('%Y-%m-%d'), is_active))
+        
+        conn.commit()
+        logger.info(f"Added or updated user {user_id} with timezone {timezone}")
+        return True

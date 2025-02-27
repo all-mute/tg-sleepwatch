@@ -45,9 +45,21 @@ def calculate_points(target_time, actual_time):
         logger.error(f"Error calculating points: {e}")
         return 0
 
-def get_yesterday_date():
-    """Get yesterday's date in YYYY-MM-DD format."""
-    yesterday = datetime.now() - timedelta(days=1)
+def get_yesterday_date(now_date=None):
+    """
+    Get yesterday's date in YYYY-MM-DD format.
+    
+    Args:
+        now_date: Optional datetime object to calculate yesterday from.
+                 If None, uses current datetime.
+    
+    Returns:
+        String representing yesterday's date in YYYY-MM-DD format
+    """
+    if now_date is None:
+        now_date = datetime.now()
+    
+    yesterday = now_date - timedelta(days=1)
     return yesterday.strftime('%Y-%m-%d')
 
 def create_plot_text(points_data):
