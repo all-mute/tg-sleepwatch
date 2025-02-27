@@ -11,6 +11,8 @@ RUN pip install "APScheduler>=3.6.3" --upgrade
 
 COPY . .
 
+# Создаем необходимые директории
 RUN mkdir -p data
+RUN mkdir -p logs
 
 CMD ["python", "bot.py"]

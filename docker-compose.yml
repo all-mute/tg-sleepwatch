@@ -8,5 +8,7 @@ services:
       - .env
     volumes:
       - ./data:/app/data
+      - ./logs:/app/logs
     environment:
       - TZ=${TZ}
+      - LOG_LEVEL=${LOG_LEVEL}

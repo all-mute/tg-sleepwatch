@@ -18,4 +18,4 @@
 Должно быть логирование и переменные окружения.
 В качестве базы данных используй SQLite.
 
-telegram token: 7716338067:AAG5XCqLq9GboykfSAuXmkBGslEf9kbLx9M
+telegram token: 771633...

@@ -164,3 +164,43 @@ class Database:
         if self.connection:
             self.connection.close()
             self.connection = None
+
+    def has_sleep_record(self, user_id, date):
+        """Check if a user has a sleep record for a specific date."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT COUNT(*) FROM sleep_records WHERE user_id = ? AND date = ?",
+            (user_id, date.strftime('%Y-%m-%d'))
+        )
+        count = cursor.fetchone()[0]
+        return count > 0
+
+    def get_last_sleep_record(self, user_id):
+        """Get the last sleep record for a user."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT date, sleep_time, points FROM sleep_records WHERE user_id = ? ORDER BY date DESC LIMIT 1",
+            (user_id,)
+        )
+        record = cursor.fetchone()
+        
+        if record:
+            return {
+                'date': record[0],
+                'sleep_time': record[1],
+                'points': record[2]
+            }
+        return None
+        
+    def update_sleep_record(self, user_id, date, sleep_time, points):
+        """Update an existing sleep record."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE sleep_records SET sleep_time = ?, points = ? WHERE user_id = ? AND date = ?",
+            (sleep_time, points, user_id, date)
+        )
+        conn.commit()
+        return True
